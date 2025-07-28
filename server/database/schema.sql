@@ -1,5 +1,5 @@
 -- Création de la table des utilisateurs du système
-CREATE TABLE system_users (
+CREATE TABLE users (
     id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     firstname VARCHAR(150) NOT NULL,
     lastname VARCHAR(150) NOT NULL,
@@ -9,12 +9,48 @@ CREATE TABLE system_users (
     is_admin BOOLEAN NOT NULL DEFAULT FALSE,
     is_active BOOLEAN NOT NULL DEFAULT TRUE
 );
-
 -- Insertion d’un super administrateur initial
-INSERT INTO system_users (firstname, lastname, email, password, is_superadmin, is_admin, is_active)
-VALUES ('thibaud', 'guadagna', 'thibaud.guadagna@gmail.com', 'thibaud', TRUE, FALSE, TRUE);
+INSERT INTO users (id, firstname, lastname, email, password, is_superadmin, is_admin, is_active)
+VALUES (1, 'THIBAUD', 'GUADAGNA', 'thibaud.guadagna@gmail.com', 'thibaud', TRUE, FALSE, TRUE);
+
+-- Création de la table des catégories de joueurs
+CREATE TABLE player_categories (
+    id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    name VARCHAR(255) NOT NULL
+);
+
+INSERT INTO player_categories ( id, name)
+VALUES 
+(1, 'U6'),
+(2, 'U7'),
+(3, 'U8'),
+(4, 'U9'),
+(5, 'U10'),
+(6, 'U11'),
+(7, 'U12'),
+(8, 'U13'),
+(9, 'U14'),
+(10, 'U15'),
+(11, 'U16'),
+(12, 'U17'),
+(13, 'U18'),
+(14, 'Seniors');
 
 
+-- Insertion d'une table d'utilisateur attendant un accès
+CREATE TABLE waiting_users (
+    id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    firstname VARCHAR(150) NOT NULL,            
+    lastname VARCHAR(150) NOT NULL,              
+    email VARCHAR(150) NOT NULL,                
+    password VARCHAR(150) NOT NULL,              
+    license_number VARCHAR(50) NOT NULL,      
+    trained_category_id INT NOT NULL,            
+    request_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    validated_by INT,                            -- admin qui valide (nullable jusqu’à validation)
+    FOREIGN KEY (trained_category_id) REFERENCES player_categories(id),
+    FOREIGN KEY (validated_by) REFERENCES users(id)
+);
 -- Création de la table des équipes sportives
 CREATE TABLE sports_teams (
     id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -23,13 +59,7 @@ CREATE TABLE sports_teams (
 );
 
 
--- Création de la table des catégories de joueurs
-CREATE TABLE player_categories (
-    id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    users_created INT NOT NULL,
-    FOREIGN KEY (users_created) REFERENCES system_users(id)
-);
+
 
 
 -- Création de la table des joueurs
